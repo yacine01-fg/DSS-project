@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Trip {{ trip.trip_id }}{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1>Trip {{ trip.trip_id }}</h1>
+  <p>Complete trip information — fetched via DOM</p>
+</div>
+
+<div class="container">
+  <a href="/" class="btn btn-primary btn-sm" style="margin-bottom:24px; display:inline-block;">← Back to Trips</a>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="badge">{{ trip.line_id }}</span>
+      <span style="font-family:'Playfair Display',serif; font-size:1.2rem;">
+        {{ trip.departure }}
+        <span style="color:var(--gold)"> → </span>
+        {{ trip.arrival }}
+      </span>
+    </div>
+    <div class="card-body">
+
+      <!-- DETAIL BOXES -->
+      <div class="detail-grid">
+        <div class="detail-box">
+          <div class="label">Trip Code</div>
+          <div class="value">{{ trip.trip_id }}</div>
+        </div>
+        <div class="detail-box">
+          <div class="label">Line</div>
+          <div class="value">{{ trip.line_id }}</div>
+        </div>
+        <div class="detail-box">
+          <div class="label">Departure City</div>
+          <div class="value">{{ trip.departure }}</div>
+        </div>
+        <div class="detail-box">
+          <div class="label">Arrival City</div>
+          <div class="value">{{ trip.arrival }}</div>
+        </div>
+        <div class="detail-box">
+          <div class="label">Departure Time</div>
+          <div class="value">{{ trip.dep_time }}</div>
+        </div>
+        <div class="detail-box">
+          <div class="label">Arrival Time</div>
+          <div class="value">{{ trip.arr_time }}</div>
+        </div>
+        <div class="detail-box">
+          <div class="label">Train Type</div>
+          <div class="value">
+            <span class="pill
+              {% if trip.train_type == 'Normal' %}pill-normal
+              {% elif trip.train_type == 'Rapid' %}pill-rapid
+              {% else %}pill-coradia{% endif %}">
+              {{ trip.train_type }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLASSES TABLE -->
+      <h3 style="font-size:.78rem; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); font-weight:700; margin-bottom:14px;">
+        Available Classes &amp; Prices
+      </h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Class</th>
+            <th>Price (DA)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for cls in trip.classes %}
+          <tr>
+            <td>
+              <span class="
+                {% if cls.name == 'VIP' %}vip
+                {% elif cls.name == 'First' %}first
+                {% else %}eco{% endif %}">
+                {{ cls.name }}
+              </span>
+            </td>
+            <td class="fw6">{{ cls.price }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div style="margin-top:18px; font-size:.82rem; color:#aaa; letter-spacing:.04em;">
+        ℹ️ This page is generated using <strong>XML DOM</strong> (xml.dom.minidom)
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

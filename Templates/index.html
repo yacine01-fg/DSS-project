@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}All Trips{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1>Railway Trip Management</h1>
+  <p>Search, filter, and explore all train trips across Algeria</p>
+</div>
+
+<div class="container">
+
+  <!-- ── FILTER FORM ── -->
+  <div class="filter-form">
+    <h3>🔍 Search &amp; Filter Trips</h3>
+    <form method="GET" action="/search">
+      <div class="filter-grid">
+        <div>
+          <label>Trip Code</label>
+          <input type="text" name="trip_code" placeholder="e.g. T101"
+                 value="{{ filters.trip_code if filters else '' }}"/>
+        </div>
+        <div>
+          <label>Departure City</label>
+          <select name="departure">
+            <option value="">All</option>
+            {% for d in departures %}
+              <option value="{{ d }}" {% if filters and filters.departure == d %}selected{% endif %}>{{ d }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>Arrival City</label>
+          <select name="arrival">
+            <option value="">All</option>
+            {% for a in arrivals %}
+              <option value="{{ a }}" {% if filters and filters.arrival == a %}selected{% endif %}>{{ a }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>Train Type</label>
+          <select name="train_type">
+            <option value="">All</option>
+            {% for t in types %}
+              <option value="{{ t }}" {% if filters and filters.train_type == t %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label>Max Price (DA)</label>
+          <input type="number" name="max_price" placeholder="e.g. 1500" min="0"
+                 value="{{ filters.max_price if filters else '' }}"/>
+        </div>
+        <div style="display:flex; gap:8px; align-items:flex-end;">
+          <button type="submit" class="btn btn-primary">Search</button>
+          <a href="/" class="btn btn-gold">Reset</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- ── RESULTS COUNT ── -->
+  {% if filters %}
+    {% if trips %}
+      <div class="alert alert-info">
+        ✅ <strong>{{ trips | length }}</strong> trip(s) found matching your criteria.
+      </div>
+    {% else %}
+      <div class="alert alert-warning">
+        ⚠️ No trips found matching your criteria. Try adjusting the filters.
+      </div>
+    {% endif %}
+  {% endif %}
+
+  <!-- ── TRIPS TABLE ── -->
+  {% if trips %}
+  <div class="card">
+    <div class="card-header">
+      <span class="badge">ALL TRIPS</span>
+      <span style="font-family:'Playfair Display',serif; font-size:1.1rem;">
+        Trip Listings
+      </span>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <table>
+        <thead>
+          <tr>
+            <th>Trip ID</th>
+            <th>Line</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Schedule</th>
+            <th>Train Type</th>
+            <th>Classes</th>
+            <th>Min Price (DA)</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for trip in trips %}
+          <tr>
+            <td class="fw6">{{ trip.trip_id }}</td>
+            <td>{{ trip.line_id }}</td>
+            <td>{{ trip.departure }}</td>
+            <td>{{ trip.arrival }}</td>
+            <td>{{ trip.dep_time }} – {{ trip.arr_time }}</td>
+            <td>
+              <span class="pill
+                {% if trip.train_type == 'Normal' %}pill-normal
+                {% elif trip.train_type == 'Rapid' %}pill-rapid
+                {% else %}pill-coradia{% endif %}">
+                {{ trip.train_type }}
+              </span>
+            </td>
+            <td>
+              {% for cls in trip.classes %}
+                <span class="
+                  {% if cls.name == 'VIP' %}vip
+                  {% elif cls.name == 'First' %}first
+                  {% else %}eco{% endif %}">
+                  {{ cls.name }}
+                </span>{% if not loop.last %}, {% endif %}
+              {% endfor %}
+            </td>
+            <td class="fw6">{{ trip.min_price }}</td>
+            <td><a href="/trip/{{ trip.trip_id }}" class="detail-link">View →</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+    {% if not filters %}
+      <div class="no-results">No trips available in the database.</div>
+    {% endif %}
+  {% endif %}
+
+</div>
+{% endblock %}

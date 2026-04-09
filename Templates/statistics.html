@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Statistics{% endblock %}
+
+{% block content %}
+<div class="page-hero">
+  <h1>Statistics</h1>
+  <p>Computed using XML ElementTree — cheapest/most expensive trips &amp; train type counts</p>
+</div>
+
+<div class="container">
+
+  <!-- ── TRAIN TYPE COUNTS ── -->
+  <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:18px; color:var(--ink);">
+    Number of Trips per Train Type
+  </h2>
+  <div class="stats-grid" style="margin-bottom:36px;">
+    {% for train_type, count in type_counter.items() %}
+    <div class="stat-box">
+      <div class="val">{{ count }}</div>
+      <div class="lbl">
+        <span class="pill
+          {% if train_type == 'Normal' %}pill-normal
+          {% elif train_type == 'Rapid' %}pill-rapid
+          {% else %}pill-coradia{% endif %}">
+          {{ train_type }}
+        </span>
+      </div>
+    </div>
+    {% endfor %}
+    <div class="stat-box">
+      <div class="val">{{ type_counter.values() | sum }}</div>
+      <div class="lbl">Total Trips</div>
+    </div>
+  </div>
+
+  <!-- ── PER LINE STATS ── -->
+  <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:18px; color:var(--ink);">
+    Cheapest &amp; Most Expensive Trip per Line
+  </h2>
+
+  {% for ls in line_stats %}
+  <div class="card">
+    <div class="card-header">
+      <span class="badge">{{ ls.line_id }}</span>
+      <span style="font-family:'Playfair Display',serif; font-size:1.1rem;">
+        {{ ls.departure }}
+        <span style="color:var(--gold)"> → </span>
+        {{ ls.arrival }}
+      </span>
+      <span style="margin-left:auto; font-size:.82rem; opacity:.65;">{{ ls.nb_trips }} trips</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Trip ID</th>
+            <th>Schedule</th>
+            <th>Train Type</th>
+            <th>Price (DA)</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Cheapest -->
+          <tr>
+            <td><span style="color:var(--green); font-weight:700;">💚 Cheapest</span></td>
+            <td class="fw6">{{ ls.cheapest.trip_id }}</td>
+            <td>{{ ls.cheapest.dep_time }} – {{ ls.cheapest.arr_time }}</td>
+            <td>
+              <span class="pill
+                {% if ls.cheapest.train_type == 'Normal' %}pill-normal
+                {% elif ls.cheapest.train_type == 'Rapid' %}pill-rapid
+                {% else %}pill-coradia{% endif %}">
+                {{ ls.cheapest.train_type }}
+              </span>
+            </td>
+            <td class="fw6" style="color:var(--green);">{{ ls.cheapest.min_price }}</td>
+            <td><a href="/trip/{{ ls.cheapest.trip_id }}" class="detail-link">View →</a></td>
+          </tr>
+          <!-- Most Expensive -->
+          <tr>
+            <td><span style="color:var(--red); font-weight:700;">🔴 Most Expensive</span></td>
+            <td class="fw6">{{ ls.expensive.trip_id }}</td>
+            <td>{{ ls.expensive.dep_time }} – {{ ls.expensive.arr_time }}</td>
+            <td>
+              <span class="pill
+                {% if ls.expensive.train_type == 'Normal' %}pill-normal
+                {% elif ls.expensive.train_type == 'Rapid' %}pill-rapid
+                {% else %}pill-coradia{% endif %}">
+                {{ ls.expensive.train_type }}
+              </span>
+            </td>
+            <td class="fw6" style="color:var(--red);">{{ ls.expensive.max_price }}</td>
+            <td><a href="/trip/{{ ls.expensive.trip_id }}" class="detail-link">View →</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endfor %}
+
+  <div style="margin-top:10px; font-size:.82rem; color:#aaa; letter-spacing:.04em;">
+    ℹ️ These statistics are generated using <strong>XML ElementTree</strong> (xml.etree.ElementTree)
+  </div>
+
+</div>
+{% endblock %}

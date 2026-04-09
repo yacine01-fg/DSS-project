@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transport>
+  <line id="L01" departure="Oran" arrival="Algiers">
+    <trip id="T101" departure="Oran" arrival="Algiers">
+      <schedule>
+        <departure_time>06:25</departure_time>
+        <arrival_time>11:30</arrival_time>
+      </schedule>
+      <train type="Normal"/>
+      <classes>
+        <class name="Economy" price="900"/>
+      </classes>
+    </trip>
+    <trip id="T102" departure="Oran" arrival="Algiers">
+      <schedule>
+        <departure_time>08:00</departure_time>
+        <arrival_time>12:30</arrival_time>
+      </schedule>
+      <train type="Rapid"/>
+      <classes>
+        <class name="Economy" price="1020"/>
+        <class name="VIP" price="2500"/>
+      </classes>
+    </trip>
+    <trip id="T103" departure="Oran" arrival="Algiers">
+      <schedule>
+        <departure_time>15:00</departure_time>
+        <arrival_time>18:30</arrival_time>
+      </schedule>
+      <train type="Coradia"/>
+      <classes>
+        <class name="Economy" price="1200"/>
+        <class name="First" price="2000"/>
+      </classes>
+    </trip>
+  </line>
+
+  <line id="L02" departure="Algiers" arrival="Constantine">
+    <trip id="T201" departure="Algiers" arrival="Constantine">
+      <schedule>
+        <departure_time>07:00</departure_time>
+        <arrival_time>13:00</arrival_time>
+      </schedule>
+      <train type="Normal"/>
+      <classes>
+        <class name="Economy" price="950"/>
+      </classes>
+    </trip>
+    <trip id="T202" departure="Algiers" arrival="Constantine">
+      <schedule>
+        <departure_time>09:30</departure_time>
+        <arrival_time>14:30</arrival_time>
+      </schedule>
+      <train type="Rapid"/>
+      <classes>
+        <class name="Economy" price="1100"/>
+        <class name="VIP" price="2800"/>
+      </classes>
+    </trip>
+    <trip id="T203" departure="Algiers" arrival="Constantine">
+      <schedule>
+        <departure_time>14:00</departure_time>
+        <arrival_time>20:00</arrival_time>
+      </schedule>
+      <train type="Normal"/>
+      <classes>
+        <class name="Economy" price="950"/>
+        <class name="First" price="1750"/>
+      </classes>
+    </trip>
+  </line>
+
+  <line id="L03" departure="Constantine" arrival="Annaba">
+    <trip id="T301" departure="Constantine" arrival="Annaba">
+      <schedule>
+        <departure_time>06:00</departure_time>
+        <arrival_time>09:00</arrival_time>
+      </schedule>
+      <train type="Coradia"/>
+      <classes>
+        <class name="Economy" price="700"/>
+        <class name="VIP" price="1800"/>
+      </classes>
+    </trip>
+    <trip id="T302" departure="Constantine" arrival="Annaba">
+      <schedule>
+        <departure_time>12:00</departure_time>
+        <arrival_time>15:30</arrival_time>
+      </schedule>
+      <train type="Rapid"/>
+      <classes>
+        <class name="Economy" price="850"/>
+        <class name="First" price="1500"/>
+      </classes>
+    </trip>
+  </line>
+
+  <line id="L04" departure="Algiers" arrival="Oran">
+    <trip id="T401" departure="Algiers" arrival="Oran">
+      <schedule>
+        <departure_time>07:30</departure_time>
+        <arrival_time>12:00</arrival_time>
+      </schedule>
+      <train type="Coradia"/>
+      <classes>
+        <class name="Economy" price="1050"/>
+        <class name="VIP" price="2600"/>
+      </classes>
+    </trip>
+    <trip id="T402" departure="Algiers" arrival="Oran">
+      <schedule>
+        <departure_time>16:00</departure_time>
+        <arrival_time>20:30</arrival_time>
+      </schedule>
+      <train type="Normal"/>
+      <classes>
+        <class name="Economy" price="900"/>
+      </classes>
+    </trip>
+  </line>
+</transport>
