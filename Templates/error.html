@@ -1,13 +1,35 @@
 {% extends "base.html" %}
-{% block title %}Error{% endblock %}
+{% block title %}Erreur{% endblock %}
+
 {% block content %}
-<div class="page-hero">
-  <h1>Error</h1>
+<div class="page-hero fade-in">
+  <div class="hero-eyebrow">Erreur</div>
+  <h1>Oops, quelque chose s'est mal passé</h1>
+  <p>La page ou la ressource demandée est introuvable.</p>
+  <div class="hero-decoration">⚠️</div>
 </div>
+
 <div class="container">
-  <div class="alert alert-warning" style="font-size:1rem;">
-    ⚠️ {{ message }}
+  <div class="card fade-in fade-in-1" style="max-width:560px; margin:0 auto; border-color:rgba(239,68,68,0.25);">
+    <div class="card-header" style="background:rgba(239,68,68,0.08); border-bottom-color:rgba(239,68,68,0.15);">
+      <span class="badge" style="background:linear-gradient(135deg,#ef4444,#b91c1c);">Erreur 404</span>
+      <span class="card-title">Ressource introuvable</span>
+    </div>
+    <div class="card-body" style="text-align:center; padding:40px;">
+      <div style="font-size:4rem; margin-bottom:20px; opacity:.5;">🚉</div>
+      <p style="color:var(--text-muted); font-size:.95rem; margin-bottom:28px; line-height:1.7;">
+        {{ message }}
+      </p>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <a href="/" class="btn btn-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Retour à l'accueil
+        </a>
+        <a href="/statistics" class="btn btn-ghost">
+          Voir les statistiques
+        </a>
+      </div>
+    </div>
   </div>
-  <a href="/" class="btn btn-primary">← Back to Home</a>
 </div>
 {% endblock %}

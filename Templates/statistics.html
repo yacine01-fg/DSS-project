@@ -1,72 +1,89 @@
 {% extends "base.html" %}
-{% block title %}Statistics{% endblock %}
+{% block title %}Statistiques{% endblock %}
 
 {% block content %}
-<div class="page-hero">
-  <h1>Statistics</h1>
-  <p>Computed using XML ElementTree — cheapest/most expensive trips &amp; train type counts</p>
+
+<!-- HERO -->
+<div class="page-hero fade-in">
+  <div class="hero-eyebrow">Analyse des données</div>
+  <h1>Statistiques des voyages</h1>
+  <p>Analyse approfondie calculée via XML ElementTree — optimisation des tarifs et répartition de la flotte.</p>
+  <div class="hero-decoration">📊</div>
 </div>
 
 <div class="container">
 
-  <!-- ── TRAIN TYPE COUNTS ── -->
-  <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:18px; color:var(--ink);">
-    Number of Trips per Train Type
-  </h2>
-  <div class="stats-grid" style="margin-bottom:36px;">
+  <!-- TRAIN TYPE COUNT CARDS -->
+  <div class="section-title fade-in fade-in-1">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="18" y="13" width="4" height="8"/></svg>
+    Répartition par type de train
+  </div>
+
+  <div class="stats-grid fade-in fade-in-1">
     {% for train_type, count in type_counter.items() %}
     <div class="stat-box">
       <div class="val">{{ count }}</div>
-      <div class="lbl">
-        <span class="pill
-          {% if train_type == 'Normal' %}pill-normal
-          {% elif train_type == 'Rapid' %}pill-rapid
-          {% else %}pill-coradia{% endif %}">
-          {{ train_type }}
-        </span>
-      </div>
+      <div class="lbl" style="margin-bottom:12px;">voyages</div>
+      <span class="pill
+        {% if train_type == 'Normal' %}pill-normal
+        {% elif train_type == 'Rapid' %}pill-rapid
+        {% else %}pill-coradia{% endif %}">
+        {{ train_type }}
+      </span>
     </div>
     {% endfor %}
-    <div class="stat-box">
-      <div class="val">{{ type_counter.values() | sum }}</div>
-      <div class="lbl">Total Trips</div>
+    <div class="stat-box" style="border-color: var(--accent); background: hsla(var(--accent-hsl), 0.05);">
+      <div class="val" style="background: linear-gradient(135deg, #fff, var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+        {{ type_counter.values() | sum }}
+      </div>
+      <div class="lbl">Total voyages</div>
     </div>
   </div>
 
-  <!-- ── PER LINE STATS ── -->
-  <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:18px; color:var(--ink);">
-    Cheapest &amp; Most Expensive Trip per Line
-  </h2>
+  <!-- PER LINE STATS -->
+  <div class="section-title fade-in fade-in-2" style="margin-top:20px;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+    Analyse comparative par ligne
+  </div>
 
   {% for ls in line_stats %}
-  <div class="card">
+  <div class="card fade-in fade-in-3" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
     <div class="card-header">
-      <span class="badge">{{ ls.line_id }}</span>
-      <span style="font-family:'Playfair Display',serif; font-size:1.1rem;">
-        {{ ls.departure }}
-        <span style="color:var(--gold)"> → </span>
-        {{ ls.arrival }}
+      <span class="badge badge-gold">{{ ls.line_id }}</span>
+      <span class="card-title" style="display:flex; align-items:center; gap:12px;">
+        <span style="color:var(--green);">{{ ls.departure }}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent2)" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        <span style="color:var(--accent);">{{ ls.arrival }}</span>
       </span>
-      <span style="margin-left:auto; font-size:.82rem; opacity:.65;">{{ ls.nb_trips }} trips</span>
+      <span style="margin-left:auto; font-size:.7rem; background:rgba(255,255,255,0.05); padding:6px 14px; border-radius:30px; color:var(--text-muted); border: 1px solid var(--border); font-weight:700; text-transform:uppercase; letter-spacing:.05em;">
+        {{ ls.nb_trips }} voyage{% if ls.nb_trips > 1 %}s{% endif %}
+      </span>
     </div>
-    <div class="card-body">
+    <div class="card-body" style="padding:0; overflow-x:auto;">
       <table>
         <thead>
           <tr>
-            <th>Category</th>
-            <th>Trip ID</th>
-            <th>Schedule</th>
-            <th>Train Type</th>
-            <th>Price (DA)</th>
-            <th>Details</th>
+            <th>Catégorie</th>
+            <th>ID Voyage</th>
+            <th>Horaire</th>
+            <th>Type</th>
+            <th>Prix (DA)</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           <!-- Cheapest -->
           <tr>
-            <td><span style="color:var(--green); font-weight:700;">💚 Cheapest</span></td>
-            <td class="fw6">{{ ls.cheapest.trip_id }}</td>
-            <td>{{ ls.cheapest.dep_time }} – {{ ls.cheapest.arr_time }}</td>
+            <td>
+              <span style="display:inline-flex; align-items:center; gap:8px; color:#34d399; font-weight:800; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                Économique
+              </span>
+            </td>
+            <td><span class="fw6" style="color:var(--accent); font-size:1rem;">{{ ls.cheapest.trip_id }}</span></td>
+            <td style="color:var(--text-muted); font-size:.85rem; font-variant-numeric:tabular-nums;">
+              {{ ls.cheapest.dep_time }} <span style="color:var(--accent2); opacity:0.6;">→</span> {{ ls.cheapest.arr_time }}
+            </td>
             <td>
               <span class="pill
                 {% if ls.cheapest.train_type == 'Normal' %}pill-normal
@@ -75,14 +92,24 @@
                 {{ ls.cheapest.train_type }}
               </span>
             </td>
-            <td class="fw6" style="color:var(--green);">{{ ls.cheapest.min_price }}</td>
-            <td><a href="/trip/{{ ls.cheapest.trip_id }}" class="detail-link">View →</a></td>
+            <td>
+              <span class="fw6" style="color:var(--green); font-size:1.1rem;">{{ ls.cheapest.min_price }}</span>
+              <span style="font-size:.7rem; color:var(--text-faint); font-weight:700;"> DA</span>
+            </td>
+            <td><a href="/trip/{{ ls.cheapest.trip_id }}" class="btn btn-ghost btn-sm" style="padding: 6px 12px; font-size:.75rem;">Voir</a></td>
           </tr>
           <!-- Most Expensive -->
           <tr>
-            <td><span style="color:var(--red); font-weight:700;">🔴 Most Expensive</span></td>
-            <td class="fw6">{{ ls.expensive.trip_id }}</td>
-            <td>{{ ls.expensive.dep_time }} – {{ ls.expensive.arr_time }}</td>
+            <td>
+              <span style="display:inline-flex; align-items:center; gap:8px; color:#fb7185; font-weight:800; font-size:.75rem; text-transform:uppercase; letter-spacing:.05em;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg>
+                Premium
+              </span>
+            </td>
+            <td><span class="fw6" style="color:var(--accent); font-size:1rem;">{{ ls.expensive.trip_id }}</span></td>
+            <td style="color:var(--text-muted); font-size:.85rem; font-variant-numeric:tabular-nums;">
+              {{ ls.expensive.dep_time }} <span style="color:var(--accent2); opacity:0.6;">→</span> {{ ls.expensive.arr_time }}
+            </td>
             <td>
               <span class="pill
                 {% if ls.expensive.train_type == 'Normal' %}pill-normal
@@ -91,8 +118,11 @@
                 {{ ls.expensive.train_type }}
               </span>
             </td>
-            <td class="fw6" style="color:var(--red);">{{ ls.expensive.max_price }}</td>
-            <td><a href="/trip/{{ ls.expensive.trip_id }}" class="detail-link">View →</a></td>
+            <td>
+              <span class="fw6" style="color:#fb7185; font-size:1.1rem;">{{ ls.expensive.max_price }}</span>
+              <span style="font-size:.7rem; color:var(--text-faint); font-weight:700;"> DA</span>
+            </td>
+            <td><a href="/trip/{{ ls.expensive.trip_id }}" class="btn btn-ghost btn-sm" style="padding: 6px 12px; font-size:.75rem;">Voir</a></td>
           </tr>
         </tbody>
       </table>
@@ -100,8 +130,9 @@
   </div>
   {% endfor %}
 
-  <div style="margin-top:10px; font-size:.82rem; color:#aaa; letter-spacing:.04em;">
-    ℹ️ These statistics are generated using <strong>XML ElementTree</strong> (xml.etree.ElementTree)
+  <div style="margin-top:24px; font-size:.75rem; color:var(--text-faint); display:flex; align-items:center; gap:10px; letter-spacing:.02em; font-weight:500;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    Calculs de performance générés en temps réel avec <strong>XML ElementTree</strong>.
   </div>
 
 </div>

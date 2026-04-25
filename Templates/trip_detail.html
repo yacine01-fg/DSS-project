@@ -1,97 +1,177 @@
 {% extends "base.html" %}
-{% block title %}Trip {{ trip.trip_id }}{% endblock %}
+{% block title %}Voyage {{ trip.trip_id }}{% endblock %}
 
 {% block content %}
-<div class="page-hero">
-  <h1>Trip {{ trip.trip_id }}</h1>
-  <p>Complete trip information — fetched via DOM</p>
+
+<!-- HERO -->
+<div class="page-hero fade-in">
+  <div class="hero-eyebrow">Détails du voyage</div>
+  <h1>Voyage&nbsp;{{ trip.trip_id }}</h1>
+  <p>Consultez les informations complètes du voyage — extraction haute fidélité via XML DOM.</p>
+  <div class="hero-decoration">🎫</div>
 </div>
 
 <div class="container">
-  <a href="/" class="btn btn-primary btn-sm" style="margin-bottom:24px; display:inline-block;">← Back to Trips</a>
 
-  <div class="card">
-    <div class="card-header">
-      <span class="badge">{{ trip.line_id }}</span>
-      <span style="font-family:'Playfair Display',serif; font-size:1.2rem;">
-        {{ trip.departure }}
-        <span style="color:var(--gold)"> → </span>
-        {{ trip.arrival }}
-      </span>
-    </div>
-    <div class="card-body">
+  <!-- BACK BUTTON -->
+  <div class="fade-in" style="margin-bottom:32px; display:flex; gap:12px; align-items:center;">
+    <a href="/" class="btn btn-ghost btn-sm">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Retour
+    </a>
+    <a href="/statistics" class="btn btn-ghost btn-sm">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="18" y="13" width="4" height="8"/></svg>
+      Stats
+    </a>
+  </div>
 
-      <!-- DETAIL BOXES -->
-      <div class="detail-grid">
-        <div class="detail-box">
-          <div class="label">Trip Code</div>
-          <div class="value">{{ trip.trip_id }}</div>
+  <!-- ROUTE BANNER -->
+  <div class="card fade-in fade-in-1" style="border-color:hsla(var(--accent-hsl), 0.2); background: linear-gradient(135deg, hsla(var(--accent-hsl), 0.05), hsla(var(--accent2-hsl), 0.03));">
+    <div class="card-body" style="padding:40px 32px;">
+      <div style="display:flex; align-items:center; justify-content:center; gap:30px; flex-wrap:wrap;">
+        <div style="text-align:center;">
+          <div style="font-size:.7rem; font-weight:800; letter-spacing:.15em; text-transform:uppercase; color:var(--text-faint); margin-bottom:10px;">Départ</div>
+          <div style="font-size:2.2rem; font-weight:800; color:var(--green); letter-spacing:-0.03em;">{{ trip.departure }}</div>
+          <div style="font-size:1.1rem; color:var(--text-muted); margin-top:6px; font-variant-numeric:tabular-nums; font-weight:600;">{{ trip.dep_time }}</div>
         </div>
-        <div class="detail-box">
-          <div class="label">Line</div>
-          <div class="value">{{ trip.line_id }}</div>
-        </div>
-        <div class="detail-box">
-          <div class="label">Departure City</div>
-          <div class="value">{{ trip.departure }}</div>
-        </div>
-        <div class="detail-box">
-          <div class="label">Arrival City</div>
-          <div class="value">{{ trip.arrival }}</div>
-        </div>
-        <div class="detail-box">
-          <div class="label">Departure Time</div>
-          <div class="value">{{ trip.dep_time }}</div>
-        </div>
-        <div class="detail-box">
-          <div class="label">Arrival Time</div>
-          <div class="value">{{ trip.arr_time }}</div>
-        </div>
-        <div class="detail-box">
-          <div class="label">Train Type</div>
-          <div class="value">
-            <span class="pill
-              {% if trip.train_type == 'Normal' %}pill-normal
-              {% elif trip.train_type == 'Rapid' %}pill-rapid
-              {% else %}pill-coradia{% endif %}">
-              {{ trip.train_type }}
-            </span>
+        
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:12px; min-width:150px;">
+          <span class="pill
+            {% if trip.train_type == 'Normal' %}pill-normal
+            {% elif trip.train_type == 'Rapid' %}pill-rapid
+            {% else %}pill-coradia{% endif %}">
+            {{ trip.train_type }}
+          </span>
+          <div style="width:100%; height:2px; background: linear-gradient(90deg, var(--green), var(--accent), var(--accent2)); border-radius:2px; position:relative;">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:var(--bg-deep); padding:0 10px; border-radius:50%; border:1px solid var(--border);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </div>
           </div>
+          <span style="font-size:.75rem; color:var(--text-faint); font-weight:700; text-transform:uppercase; letter-spacing:.1em;">Ligne {{ trip.line_id }}</span>
+        </div>
+
+        <div style="text-align:center;">
+          <div style="font-size:.7rem; font-weight:800; letter-spacing:.15em; text-transform:uppercase; color:var(--text-faint); margin-bottom:10px;">Arrivée</div>
+          <div style="font-size:2.2rem; font-weight:800; color:var(--accent); letter-spacing:-0.03em;">{{ trip.arrival }}</div>
+          <div style="font-size:1.1rem; color:var(--text-muted); margin-top:6px; font-variant-numeric:tabular-nums; font-weight:600;">{{ trip.arr_time }}</div>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- CLASSES TABLE -->
-      <h3 style="font-size:.78rem; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); font-weight:700; margin-bottom:14px;">
-        Available Classes &amp; Prices
-      </h3>
-      <table>
+  <!-- DETAIL BOXES -->
+  <div class="section-title fade-in fade-in-2">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+    Fiche d'information
+  </div>
+
+  <div class="detail-grid fade-in fade-in-2">
+    <div class="detail-box">
+      <div class="label">Référence</div>
+      <div class="value" style="color:var(--accent);">{{ trip.trip_id }}</div>
+    </div>
+    <div class="detail-box">
+      <div class="label">Ligne ferroviaire</div>
+      <div class="value">{{ trip.line_id }}</div>
+    </div>
+    <div class="detail-box">
+      <div class="label">Origine</div>
+      <div class="value" style="color:var(--green);">{{ trip.departure }}</div>
+    </div>
+    <div class="detail-box">
+      <div class="label">Destination</div>
+      <div class="value" style="color:var(--accent);">{{ trip.arrival }}</div>
+    </div>
+    <div class="detail-box">
+      <div class="label">Horaire départ</div>
+      <div class="value" style="font-variant-numeric:tabular-nums;">{{ trip.dep_time }}</div>
+    </div>
+    <div class="detail-box">
+      <div class="label">Horaire arrivée</div>
+      <div class="value" style="font-variant-numeric:tabular-nums;">{{ trip.arr_time }}</div>
+    </div>
+    <div class="detail-box">
+      <div class="label">Type de locomotive</div>
+      <div class="value">
+        <span class="pill
+          {% if trip.train_type == 'Normal' %}pill-normal
+          {% elif trip.train_type == 'Rapid' %}pill-rapid
+          {% else %}pill-coradia{% endif %}">
+          {{ trip.train_type }}
+        </span>
+      </div>
+    </div>
+    <div class="detail-box">
+      <div class="label">Tarif d'appel</div>
+      <div class="value" style="color:var(--gold);">{{ trip.min_price }} <span style="font-size:.75rem; font-weight:700; color:var(--text-faint);">DA</span></div>
+    </div>
+  </div>
+
+  <!-- CLASSES TABLE -->
+  <div class="section-title fade-in fade-in-3">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+    Classes &amp; Services disponibles
+  </div>
+
+  <div class="card fade-in fade-in-3">
+    <div class="card-body" style="padding:0;">
+      <table id="classes-table">
         <thead>
           <tr>
-            <th>Class</th>
-            <th>Price (DA)</th>
+            <th>Classe</th>
+            <th>Tarif (DA)</th>
+            <th>Service &amp; Confort</th>
           </tr>
         </thead>
         <tbody>
           {% for cls in trip.classes %}
           <tr>
             <td>
-              <span class="
+              <span class="fw6
                 {% if cls.name == 'VIP' %}vip
                 {% elif cls.name == 'First' %}first
-                {% else %}eco{% endif %}">
+                {% else %}eco{% endif %}"
+                style="font-size:1.1rem; display:flex; align-items:center; justify-content:center; gap:10px;">
+                {% if cls.name == 'VIP' %}👑 {% elif cls.name == 'First' %}⭐ {% else %}🌿 {% endif %}
                 {{ cls.name }}
               </span>
             </td>
-            <td class="fw6">{{ cls.price }}</td>
+            <td>
+              <span class="fw6" style="font-size:1.3rem;
+                {% if cls.name == 'VIP' %}color:var(--red);
+                {% elif cls.name == 'First' %}color:#38bdf8;
+                {% else %}color:var(--green);{% endif %}">
+                {{ cls.price }}
+              </span>
+              <span style="font-size:.75rem; color:var(--text-faint); font-weight:700;"> DA</span>
+            </td>
+            <td>
+              <div style="display:flex; align-items:center; justify-content:center; gap:6px;">
+                {% if cls.name == 'VIP' %}
+                  {% for i in range(5) %}<span style="color:var(--gold); font-size:1rem;">★</span>{% endfor %}
+                {% elif cls.name == 'First' %}
+                  {% for i in range(4) %}<span style="color:var(--gold); font-size:1rem;">★</span>{% endfor %}
+                  <span style="color:var(--text-faint); font-size:1rem;">★</span>
+                {% else %}
+                  {% for i in range(3) %}<span style="color:var(--gold); font-size:1rem;">★</span>{% endfor %}
+                  {% for i in range(2) %}<span style="color:var(--text-faint); font-size:1rem;">★</span>{% endfor %}
+                {% endif %}
+              </div>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
-
-      <div style="margin-top:18px; font-size:.82rem; color:#aaa; letter-spacing:.04em;">
-        ℹ️ This page is generated using <strong>XML DOM</strong> (xml.dom.minidom)
-      </div>
     </div>
   </div>
+
+  <!-- TECH NOTE -->
+  <div style="margin-top:12px; font-size:.75rem; color:var(--text-faint); display:flex; align-items:center; gap:10px; padding:16px 20px; background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:var(--radius-sm); font-weight:500;">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    Structure de données extraite avec précision via <strong>XML DOM</strong> (minidom).
+  </div>
+
+</div>
+
 </div>
 {% endblock %}

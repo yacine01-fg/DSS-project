@@ -2,108 +2,152 @@
 {% block title %}All Trips{% endblock %}
 
 {% block content %}
-<div class="page-hero">
-  <h1>Railway Trip Management</h1>
-  <p>Search, filter, and explore all train trips across Algeria</p>
+
+<!-- HERO -->
+<div class="page-hero fade-in">
+  <div class="hero-eyebrow">Railway Trip Management</div>
+  <h1>Explorez tous les voyages</h1>
+  <p>Recherchez, filtrez et réservez parmi tous les trains à travers l'Algérie avec une expérience fluide et moderne.</p>
+  <div class="hero-decoration">🚆</div>
 </div>
 
 <div class="container">
 
-  <!-- ── FILTER FORM ── -->
-  <div class="filter-form">
-    <h3>🔍 Search &amp; Filter Trips</h3>
+  <!-- QUICK STATS -->
+  <div class="stats-grid fade-in fade-in-1">
+    <div class="stat-box">
+      <div class="val">{{ trips | length }}</div>
+      <div class="lbl">Voyages affichés</div>
+    </div>
+    <div class="stat-box">
+      <div class="val">{{ departures | length }}</div>
+      <div class="lbl">Villes départ</div>
+    </div>
+    <div class="stat-box">
+      <div class="val">{{ arrivals | length }}</div>
+      <div class="lbl">Villes arrivée</div>
+    </div>
+    <div class="stat-box">
+      <div class="val">{{ types | length }}</div>
+      <div class="lbl">Types de train</div>
+    </div>
+  </div>
+
+  <!-- FILTER FORM -->
+  <div class="filter-form fade-in fade-in-2">
+    <div class="filter-form-title">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      Recherche &amp; Filtres avancés
+    </div>
     <form method="GET" action="/search">
       <div class="filter-grid">
         <div>
-          <label>Trip Code</label>
-          <input type="text" name="trip_code" placeholder="e.g. T101"
+          <label>Code voyage</label>
+          <input type="text" id="input-trip-code" name="trip_code" placeholder="ex: T101"
                  value="{{ filters.trip_code if filters else '' }}"/>
         </div>
         <div>
-          <label>Departure City</label>
-          <select name="departure">
-            <option value="">All</option>
+          <label>Ville de départ</label>
+          <select id="select-departure" name="departure">
+            <option value="">Toutes les villes</option>
             {% for d in departures %}
               <option value="{{ d }}" {% if filters and filters.departure == d %}selected{% endif %}>{{ d }}</option>
             {% endfor %}
           </select>
         </div>
         <div>
-          <label>Arrival City</label>
-          <select name="arrival">
-            <option value="">All</option>
+          <label>Ville d'arrivée</label>
+          <select id="select-arrival" name="arrival">
+            <option value="">Toutes les villes</option>
             {% for a in arrivals %}
               <option value="{{ a }}" {% if filters and filters.arrival == a %}selected{% endif %}>{{ a }}</option>
             {% endfor %}
           </select>
         </div>
         <div>
-          <label>Train Type</label>
-          <select name="train_type">
-            <option value="">All</option>
+          <label>Type de train</label>
+          <select id="select-type" name="train_type">
+            <option value="">Tous les types</option>
             {% for t in types %}
               <option value="{{ t }}" {% if filters and filters.train_type == t %}selected{% endif %}>{{ t }}</option>
             {% endfor %}
           </select>
         </div>
         <div>
-          <label>Max Price (DA)</label>
-          <input type="number" name="max_price" placeholder="e.g. 1500" min="0"
+          <label>Prix max (DA)</label>
+          <input type="number" id="input-max-price" name="max_price" placeholder="ex: 1500" min="0"
                  value="{{ filters.max_price if filters else '' }}"/>
         </div>
-        <div style="display:flex; gap:8px; align-items:flex-end;">
-          <button type="submit" class="btn btn-primary">Search</button>
-          <a href="/" class="btn btn-gold">Reset</a>
+        <div style="display:flex; gap:12px; align-items:flex-end;">
+          <button id="btn-search" type="submit" class="btn btn-primary" style="flex: 1;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Filtrer
+          </button>
+          <a href="/" id="btn-reset" class="btn btn-ghost">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.78"/></svg>
+          </a>
         </div>
       </div>
     </form>
   </div>
 
-  <!-- ── RESULTS COUNT ── -->
+  <!-- RESULT ALERTS -->
   {% if filters %}
     {% if trips %}
-      <div class="alert alert-info">
-        ✅ <strong>{{ trips | length }}</strong> trip(s) found matching your criteria.
+      <div class="alert alert-info fade-in" style="margin-bottom: 30px; border-radius: var(--radius-sm);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span>Nous avons trouvé <strong>{{ trips | length }}</strong> voyage(s) correspondant à vos critères.</span>
       </div>
     {% else %}
-      <div class="alert alert-warning">
-        ⚠️ No trips found matching your criteria. Try adjusting the filters.
+      <div class="alert alert-warning fade-in" style="margin-bottom: 30px; border-radius: var(--radius-sm);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span>Aucun voyage ne correspond à votre recherche. Essayez d'autres critères.</span>
       </div>
     {% endif %}
   {% endif %}
 
-  <!-- ── TRIPS TABLE ── -->
+  <!-- TRIPS TABLE -->
   {% if trips %}
-  <div class="card">
+  <div class="card fade-in fade-in-3">
     <div class="card-header">
-      <span class="badge">ALL TRIPS</span>
-      <span style="font-family:'Playfair Display',serif; font-size:1.1rem;">
-        Trip Listings
-      </span>
+      <span class="badge">{{ trips | length }} Disponibles</span>
+      <span class="card-title">Catalogue des voyages</span>
+      <span style="margin-left:auto; font-size:.7rem; color:var(--text-faint); font-weight:700; text-transform:uppercase; letter-spacing:.05em;">Source: XML DOM</span>
     </div>
-    <div class="card-body" style="padding:0;">
-      <table>
+    <div class="card-body" style="padding:0; overflow-x:auto;">
+      <table id="trips-table">
         <thead>
           <tr>
-            <th>Trip ID</th>
-            <th>Line</th>
-            <th>Departure</th>
-            <th>Arrival</th>
-            <th>Schedule</th>
-            <th>Train Type</th>
-            <th>Classes</th>
-            <th>Min Price (DA)</th>
-            <th>Details</th>
+            <th>ID Voyage</th>
+            <th>Ligne</th>
+            <th>Départ</th>
+            <th>Arrivée</th>
+            <th>Horaire</th>
+            <th>Type</th>
+            <th>Prix min</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
           {% for trip in trips %}
           <tr>
-            <td class="fw6">{{ trip.trip_id }}</td>
-            <td>{{ trip.line_id }}</td>
-            <td>{{ trip.departure }}</td>
-            <td>{{ trip.arrival }}</td>
-            <td>{{ trip.dep_time }} – {{ trip.arr_time }}</td>
+            <td><span class="fw6" style="color:var(--accent); font-size:1rem;">{{ trip.trip_id }}</span></td>
+            <td><span style="color:var(--text-faint); font-weight:700;">{{ trip.line_id }}</span></td>
+            <td>
+              <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+                <span style="width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);"></span>
+                <span style="font-weight:600;">{{ trip.departure }}</span>
+              </div>
+            </td>
+            <td>
+              <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+                <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent-glow);"></span>
+                <span style="font-weight:600;">{{ trip.arrival }}</span>
+              </div>
+            </td>
+            <td style="font-size:.85rem; color:var(--text-muted); font-variant-numeric:tabular-nums;">
+              {{ trip.dep_time }} <span style="color:var(--accent2); opacity:0.6;">→</span> {{ trip.arr_time }}
+            </td>
             <td>
               <span class="pill
                 {% if trip.train_type == 'Normal' %}pill-normal
@@ -113,17 +157,15 @@
               </span>
             </td>
             <td>
-              {% for cls in trip.classes %}
-                <span class="
-                  {% if cls.name == 'VIP' %}vip
-                  {% elif cls.name == 'First' %}first
-                  {% else %}eco{% endif %}">
-                  {{ cls.name }}
-                </span>{% if not loop.last %}, {% endif %}
-              {% endfor %}
+              <span class="fw6" style="color:var(--gold); font-size:1.1rem;">{{ trip.min_price }}</span>
+              <span style="font-size:.7rem; color:var(--text-faint); font-weight:700;"> DA</span>
             </td>
-            <td class="fw6">{{ trip.min_price }}</td>
-            <td><a href="/trip/{{ trip.trip_id }}" class="detail-link">View →</a></td>
+            <td>
+              <a href="/trip/{{ trip.trip_id }}" class="btn btn-ghost btn-sm" style="padding: 6px 14px;">
+                Détails
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:4px;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </a>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -132,9 +174,14 @@
   </div>
   {% else %}
     {% if not filters %}
-      <div class="no-results">No trips available in the database.</div>
+      <div class="no-results fade-in">
+        <div class="icon" style="font-size: 4rem; margin-bottom: 20px;">🚉</div>
+        <h3 style="color:var(--text); margin-bottom: 10px;">Aucune donnée trouvée</h3>
+        <p style="color:var(--text-faint);">Le fichier transport.xml semble vide ou inaccessible.</p>
+      </div>
     {% endif %}
   {% endif %}
+
 
 </div>
 {% endblock %}
