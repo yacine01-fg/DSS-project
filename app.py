@@ -15,10 +15,6 @@ app = Flask(__name__)
 XML_FILE = "transport.xml"
 
 
-# ─────────────────────────────────────────────
-#  DOM HELPERS  (complete trip info)
-# ─────────────────────────────────────────────
-
 def get_all_trips_dom():
     """Return all trips as a list of dicts using DOM."""
     doc = minidom.parse(XML_FILE)
@@ -70,10 +66,6 @@ def get_trip_by_id_dom(trip_id):
     return None
 
 
-# ─────────────────────────────────────────────
-#  ELEMENTTREE HELPERS  (statistics)
-# ─────────────────────────────────────────────
-
 def compute_statistics_et():
     """
     Using ElementTree:
@@ -111,7 +103,6 @@ def compute_statistics_et():
                 "max_price":  max_p,
             })
 
-            # count per train type
             type_counter[train_type] = type_counter.get(train_type, 0) + 1
 
         if trips_info:
@@ -128,10 +119,6 @@ def compute_statistics_et():
 
     return line_stats, type_counter
 
-
-# ─────────────────────────────────────────────
-#  ROUTES
-# ─────────────────────────────────────────────
 
 @app.route("/")
 def index():
@@ -158,23 +145,18 @@ def search():
 
     results = all_trips
 
-    # 1. Search by trip code
     if trip_code:
         results = [t for t in results if trip_code.upper() in t["trip_id"].upper()]
 
-    # 2. Filter by departure
     if dep_filter:
         results = [t for t in results if t["departure"].lower() == dep_filter.lower()]
 
-    # 3. Filter by arrival
     if arr_filter:
         results = [t for t in results if t["arrival"].lower() == arr_filter.lower()]
 
-    # 4. Filter by train type
     if type_filter:
         results = [t for t in results if t["train_type"].lower() == type_filter.lower()]
 
-    # 5. Filter by max price  (keep trips where min_price <= max_price)
     if max_price:
         try:
             mp = int(max_price)

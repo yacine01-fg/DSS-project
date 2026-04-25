@@ -11,6 +11,7 @@
 
     :root {
       --bg-deep:    hsl(230, 40%, 4%);
+      --bg-nav:     hsla(230, 40%, 4%, 0.8);
       --bg-card:    hsla(0, 0%, 100%, 0.03);
       --bg-card-hover: hsla(0, 0%, 100%, 0.06);
       --border:     hsla(0, 0%, 100%, 0.08);
@@ -34,6 +35,27 @@
       --radius-sm:  10px;
       --shadow-lg:  0 20px 50px rgba(0,0,0,0.5);
       --glass-blur: blur(16px);
+    }
+
+    [data-theme="light"] {
+      --bg-deep:    hsl(230, 20%, 96%);
+      --bg-nav:     hsla(230, 20%, 96%, 0.8);
+      --bg-card:    hsla(0, 0%, 0%, 0.03);
+      --bg-card-hover: hsla(0, 0%, 0%, 0.06);
+      --border:     hsla(0, 0%, 0%, 0.1);
+      --border-hover: hsla(0, 0%, 0%, 0.15);
+      
+      --accent-hsl: 245, 82%, 50%;
+      --accent:     hsl(var(--accent-hsl));
+      --accent-glow: hsla(var(--accent-hsl), 0.3);
+      
+      --accent2-hsl: 265, 90%, 50%;
+      --accent2:    hsl(var(--accent2-hsl));
+      
+      --text:       #0f172a;
+      --text-muted: #475569;
+      --text-faint: #64748b;
+      --shadow-lg:  0 20px 50px rgba(0,0,0,0.1);
     }
 
     html { scroll-behavior: smooth; }
@@ -87,7 +109,7 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      background: hsla(230, 40%, 4%, 0.8);
+      background: var(--bg-nav);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       border-bottom: 1px solid var(--border);
@@ -231,7 +253,7 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
     .card-header {
-      background: rgba(255,255,255,0.02);
+      background: var(--bg-card);
       border-bottom: 1px solid var(--border);
       padding: 20px 28px;
       display: flex;
@@ -266,7 +288,7 @@
     /* ────────── TABLES ────────── */
     table { width: 100%; border-collapse: collapse; font-size: .9rem; }
     thead tr {
-      background: rgba(255,255,255,0.02);
+      background: var(--bg-card);
       border-bottom: 1px solid var(--border);
     }
     thead th {
@@ -352,7 +374,7 @@
     .filter-grid select {
       width: 100%;
       padding: 12px 16px;
-      background: rgba(0,0,0,0.2);
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       font-size: .9rem;
@@ -367,7 +389,7 @@
       background: rgba(0,0,0,0.3);
       box-shadow: 0 0 0 4px var(--accent-glow);
     }
-    .filter-grid select option { background: #0f172a; color: var(--text); }
+    .filter-grid select option { background: var(--bg-deep); color: var(--text); }
 
     /* ────────── BUTTONS ────────── */
     .btn {
@@ -395,11 +417,11 @@
     }
     .btn-primary:hover { box-shadow: 0 12px 25px var(--accent-glow); }
     .btn-ghost {
-      background: rgba(255,255,255,0.03);
+      background: var(--bg-card);
       color: var(--text-muted);
       border: 1px solid var(--border);
     }
-    .btn-ghost:hover { background: rgba(255,255,255,0.08); color: var(--text); border-color: var(--border-hover); }
+    .btn-ghost:hover { background: var(--bg-card-hover); color: var(--text); border-color: var(--border-hover); }
 
     /* ────────── STAT BOXES ────────── */
     .stats-grid {
@@ -448,13 +470,13 @@
       margin-bottom: 40px;
     }
     .detail-box {
-      background: rgba(255,255,255,0.02);
+      background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
       padding: 24px;
       transition: all .3s ease;
     }
-    .detail-box:hover { border-color: var(--accent); background: rgba(255,255,255,0.04); }
+    .detail-box:hover { border-color: var(--accent); background: var(--bg-card-hover); }
     .detail-box .label {
       font-size: .7rem;
       text-transform: uppercase;
@@ -489,7 +511,7 @@
 
     /* ────────── FOOTER ────────── */
     footer {
-      background: rgba(0,0,0,0.2);
+      background: var(--bg-card);
       padding: 40px;
       font-size: .75rem;
       color: var(--text-faint);
@@ -550,6 +572,10 @@
     <a href="/" id="nav-home" {% if request.path == '/' and not request.args %}class="active"{% endif %}>Accueil</a>
     <a href="/search" id="nav-search" {% if request.path == '/search' %}class="active"{% endif %}>Recherche</a>
     <a href="/statistics" id="nav-stats" {% if request.path == '/statistics' %}class="active"{% endif %}>Statistiques</a>
+    <button id="theme-toggle" class="btn-ghost" style="margin-left: 10px; border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; cursor: pointer;" title="Toggle Theme">
+      <span class="icon-dark">🌙</span>
+      <span class="icon-light" style="display: none;">☀️</span>
+    </button>
   </nav>
 
   {% block content %}{% endblock %}
@@ -561,6 +587,32 @@
   </footer>
 
   <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const iconDark = document.querySelector('.icon-dark');
+    const iconLight = document.querySelector('.icon-light');
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (theme === 'light') {
+        iconDark.style.display = 'none';
+        iconLight.style.display = 'block';
+      } else {
+        iconDark.style.display = 'block';
+        iconLight.style.display = 'none';
+      }
+    }
+
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      applyTheme(newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+
     // Subtle row entrance animation
     document.querySelectorAll('tbody tr').forEach((tr, i) => {
       tr.style.animation = `fadeInUp .3s ease ${i * 0.03}s both`;
